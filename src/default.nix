@@ -5,7 +5,7 @@ let
   meta = import ./meta.nix { inherit lib vscode-utils; };
   strings = import ./strings.nix { inherit lib; };
 in
-{
+rec {
   inherit (attrsets)
     mkVscodeExtUniqueId
     ;
@@ -15,14 +15,14 @@ in
     mkVscodeExtensions
     mkVscodeExtensions'
     ;
-  
+
   inherit (meta)
     mkVscodeExtMetaLicense
     mkVscodeExtMetaLink
     mkVscodeExtMetaMaintainers
     mkVscodeExtMetaOpt
     ;
-  
+
   inherit (strings)
     isNaiveJSONList
     isVscodeExt
