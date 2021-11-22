@@ -4,13 +4,11 @@
   inputs =
     {
       nixpkgs.url = "github:nixos/nixpkgs/release-21.05";
-      devshell.url = "github:numtide/devshell";
     };
 
   outputs =
     { self
     , nixpkgs
-    , devshell
     , ...
     }@inputs:
     let
@@ -22,17 +20,14 @@
       # Super Stupid Flakes (ssf) / System As an Input - Style:
       supportedSystems = [ "x86_64-linux" "aarch64-linux" "x86_64-darwin" ];
       ufrContract = import ./ufr-polyfills/ufrContract.nix;
-
       # Dependency Groups - Style
-      devShellInputs = { inherit nixpkgs devshell; };
       # .. we hope you like this style.
       # .. it's adopted by a growing number of projects.
       # Please consider adopting it if you want to help to improve flakes.
     in
-
     {
       # what you came for ...
+      lib = ufrContract supportedSystems ./. inputs self;
       overlay = import ./overlay.nix;
     };
-
 }

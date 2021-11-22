@@ -1,20 +1,5 @@
 {
   "nodes": {
-    "devshell": {
-      "locked": {
-        "lastModified": 1637098489,
-        "narHash": "sha256-IWBYLSNSENI/fTrXdYDhuCavxcgN9+RERrPM81f6DXY=",
-        "owner": "numtide",
-        "repo": "devshell",
-        "rev": "e8c2d4967b5c498b12551d1bb49352dcf9efa3e4",
-        "type": "github"
-      },
-      "original": {
-        "owner": "numtide",
-        "repo": "devshell",
-        "type": "github"
-      }
-    },
     "nixpkgs": {
       "locked": {
         "lastModified": 1637497871,
@@ -33,7 +18,6 @@
     },
     "root": {
       "inputs": {
-        "devshell": "devshell",
         "nixpkgs": "nixpkgs"
       }
     }
