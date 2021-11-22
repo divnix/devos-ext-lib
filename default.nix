@@ -3,7 +3,7 @@ let
   pkgs = import inputs.nixpkgs {
     inherit system; config = { };
     overlays = [
-      self.overlay
+      self.overlay.vscode
     ];
   };
 in

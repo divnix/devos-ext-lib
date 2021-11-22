@@ -14,7 +14,7 @@ In `flake.nix`:
 {
   inputs.vs-ext.url = "github:divnix/vs-ext";
   outputs = inputs@{ vs-ext, ... }: digga.lib.mkFlake {
-    channels.nixos.overlays = [ vs-ext.overlay ];
+    channels.nixos.overlays = [ vs-ext.overlay.vscode ];
   };
 };
 ```
