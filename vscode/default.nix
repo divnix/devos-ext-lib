@@ -37,8 +37,8 @@ rec {
 
       pkgSetBuilder = {
         "vscode-extensions" = mkVscodeExtension';
-      }.${pkgSet};
-      pkgsInSources = lib.mapAttrs' (name: value: lib.nameValuePair (lib.removePrefix prefix name) (value)) (lib.filterAttrs (n: v: lib.hasPrefix prefix n) sources);
+      }."${pkgSet}";
+      pkgsInSources = lib.mapAttrs' (name: lib.nameValuePair (lib.removePrefix prefix name)) (lib.filterAttrs (n: v: lib.hasPrefix prefix n) sources);
     in
-    lib.mapAttrs (n: v: pkgSetBuilder v) pkgsInSources;
+    lib.mapAttrs (n: pkgSetBuilder) pkgsInSources;
 }
