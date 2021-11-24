@@ -14,7 +14,7 @@ In `flake.nix`:
 {
   inputs.vs-ext.url = "github:divnix/vs-ext";
   outputs = inputs@{ vs-ext, ... }: digga.lib.mkFlake {
-    channels.nixos.overlays = [ vs-ext.overlay ];
+    channels.nixos.overlays = [ vs-ext.overlay.vscode ];
   };
 };
 ```
@@ -23,28 +23,9 @@ In `pkgs/default.nix`:
 ```nix
 final: prev:
 let
-  sources = (import ./_sources/generated.nix) { inherit (final) fetchurl fetchgit; };
-  
-  mkVscodeExtension = extension:
-    final.vscode-utils.mkVscodeExtension extension { };
-
-  newPkgsSet = pkgSet:
-    let
-      prefix = "${pkgSet}-";
-
-      pkgSetBuilder = {
-        "vscode-extensions" = mkVscodeExtension;
-      }.${pkgSet};
-
-
-      pkgsInSources = final.lib.mapAttrs' (name: value: final.lib.nameValuePair (final.lib.removePrefix prefix name) (value)) (final.lib.filterAttrs (n: v: final.lib.hasPrefix prefix n) sources);
-    in
-    final.lib.mapAttrs (n: v: pkgSetBuilder v) pkgsInSources;
+  sources = callPackage ./_sources/generated.nix { };
 in
-{
-  inherit sources;
-
-  vscode-extensions = prev.vscode-extensions // (newPkgsSet "vscode-extensions");
+  vscode-extensions = prev.vscode-extensions // (final.lib.vscodePkgsSet "vscode-extensions" sources);
 }
 ```
 (wait for [this PR][automatically-build-source] to merge as it is the same as the above, just remember that the PR was for `vimPlugins`, so adjust accordingly).

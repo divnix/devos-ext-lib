@@ -5,24 +5,22 @@ let
   meta = import ./meta.nix { inherit lib vscode-utils; };
   strings = import ./strings.nix { inherit lib; };
 in
-{
+rec {
   inherit (attrsets)
     mkVscodeExtUniqueId
     ;
 
   inherit (generators)
     mkVscodeExtension
-    mkVscodeExtensions
-    mkVscodeExtensions'
     ;
-  
+
   inherit (meta)
     mkVscodeExtMetaLicense
     mkVscodeExtMetaLink
     mkVscodeExtMetaMaintainers
     mkVscodeExtMetaOpt
     ;
-  
+
   inherit (strings)
     isNaiveJSONList
     isVscodeExt
@@ -30,4 +28,17 @@ in
     isVsixPackage
     toJSONString
     ;
+
+  mkVscodeExtension' = extension: vscode-utils.mkVscodeExtension extension { };
+
+  vscodePkgsSet = pkgSet: sources:
+    let
+      prefix = "${pkgSet}-";
+
+      pkgSetBuilder = {
+        "vscode-extensions" = mkVscodeExtension';
+      }."${pkgSet}";
+      pkgsInSources = lib.mapAttrs' (name: lib.nameValuePair (lib.removePrefix prefix name)) (lib.filterAttrs (n: v: lib.hasPrefix prefix n) sources);
+    in
+    lib.mapAttrs (n: pkgSetBuilder) pkgsInSources;
 }
