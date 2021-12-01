@@ -29,14 +29,14 @@ rec {
     toJSONString
     ;
 
-  mkVscodeExtension' = extension: vscode-utils.mkVscodeExtension extension { };
+
 
   vscodePkgsSet = pkgSet: sources:
     let
       prefix = "${pkgSet}-";
 
       pkgSetBuilder = {
-        "vscode-extensions" = mkVscodeExtension';
+        "vscode-extensions" = extension: vscode-utils.mkVscodeExtension extension { };
       }."${pkgSet}";
       pkgsInSources = lib.mapAttrs' (name: lib.nameValuePair (lib.removePrefix prefix name)) (lib.filterAttrs (n: v: lib.hasPrefix prefix n) sources);
     in
