@@ -1,9 +1,9 @@
 {
-  description = "A kick ass library to dominate your Visual Studio Extensions (with DevOS)";
+  description = "A kick ass library to extend your DevOS experience";
 
   inputs =
     {
-      nixpkgs.url = "github:nixos/nixpkgs/release-21.05";
+      nixpkgs.url = "github:nixos/nixpkgs/release-21.11";
     };
 
   outputs =
@@ -27,7 +27,7 @@
       # what you came for ...
       lib = ufrContract supportedSystems ./. inputs self;
       overlay = {
-        vscode = import ./vscode/overlay.nix;
+        vscode = import ./src/vscode/overlay.nix;
       };
     };
 }

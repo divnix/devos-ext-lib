@@ -12,9 +12,9 @@ Within `devos` itself, you can use as follow:
 In `flake.nix`:
 ```nix
 {
-  inputs.vs-ext.url = "github:divnix/vs-ext";
-  outputs = inputs@{ vs-ext, ... }: digga.lib.mkFlake {
-    channels.nixos.overlays = [ vs-ext.overlay.vscode ];
+  inputs.devos-ext-lib.url = "github:divnix/devos-ext-lib";
+  outputs = inputs@{ devos-ext-lib, ... }: digga.lib.mkFlake {
+    channels.nixos.overlays = [ devos-ext-lib.overlay.vscode ];
   };
 };
 ```
