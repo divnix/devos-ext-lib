@@ -1,11 +1,15 @@
-[![MIT License](https://img.shields.io/github/license/divnix/devos)][mit] [![NixOS](https://img.shields.io/badge/NixOS-unstable-blue.svg?style=flat&logo=NixOS&logoColor=white)](https://nixos.org)
+[![MIT License](https://img.shields.io/github/license/divnix/devos)][mit] [![NixOS](https://img.shields.io/badge/NixOS-release--21.11-blue.svg?style=flat&logo=NixOS&logoColor=white)](https://nixos.org)
 
-# Notice
-This is alpha quality at most. There are still some rough revision to be made, especially since the [author][danielphan2003] have somewhat eligible capacity to pull this off.
+# Introduction
 
-In the meantime, check out [devos][devos] for more interesting use of Nix.
+This is a kick ass library to dominate your Extensions (with [DevOS][devos]).
+
+Currently [VS Code] extensions are supported. PRs for others
+(e.g Vim, Atom, etc.) are welcome.
 
 # Usage
+
+For now, let's use [VS Code] as an example.
 
 Within `devos` itself, you can use as follow:
 
@@ -16,7 +20,7 @@ In `flake.nix`:
   outputs = inputs@{ devos-ext-lib, ... }: digga.lib.mkFlake {
     channels.nixos.overlays = [ devos-ext-lib.overlay.vscode ];
   };
-};
+}
 ```
 
 In `pkgs/default.nix`:
@@ -24,18 +28,27 @@ In `pkgs/default.nix`:
 final: prev:
 let
   sources = callPackage ./_sources/generated.nix { };
-in
+in {
   vscode-extensions = prev.vscode-extensions // (final.lib.vscodePkgsSet "vscode-extensions" sources);
 }
 ```
-(wait for [this PR][automatically-build-source] to merge as it is the same as the above, just remember that the PR was for `vimPlugins`, so adjust accordingly).
 
-This gives us auto-generated VS Code extensions with `meta` attributes. See [`src/generators.nix`](./src/generators.nix#L34) for a detailed overview.
+This gives us auto-generated VS Code extensions, and you can override each
+extensions via overlays.
 
-## Helper scripts a.k.a `devshell`
-You can use [`bud/vscode-ext-prefetch.bash`](./bud/vscode-ext-prefetch.bash) to generate sources and metadata passthrough for extensions. Note that support for VS Marketplace extensions is not yet available as I could only find APIs for OpenVSX.
+## Metadata
 
-And no, there aren't any `devshell` yet. See below for details.
+You can use [`bud/vscode-ext-prefetch.bash`](./bud/vscode-ext-prefetch.bash)
+with [nvfetcher] to generate metadata for [VS Code] extensions. Note that
+[VS Marketplace] extensions does not have a clear API for metadata extraction.
+As a result, only [OpenVSX] ones are able to do so.
+
+See also [`src/vscode/generators.nix`](./src/vscode/generators.nix#L34) for
+a detailed overview.
+
+As [nvfetcher] generates nix sources expr for packages including extensions,
+it should also generate extensions' metadata as well.
+Feel free to open an issue to discuss about this.
 
 ## Shoulders
 This work does not reinvent the wheel. It stands on the [shoulders of the
@@ -53,19 +66,18 @@ following giants][giants]:
 
 :heart:
 
-### Things that would really improve the quality of this work
-- `devshell` (obviously, but [`bud`][bud] is still experimental, so documentations seem vague, or maybe I just got lazy).
-- More intuitive arrangement of [`src`](./src). This is a mess I created from `lib` and `vscode-utils`, so I really hope to separate them appropriately.
-- Maybe a template or at least a guideline for creating projects like this in the future? This whole project is already small, but I still can't grasp some of the core concepts. With a little of extra helps, maybe I can really pull this one off for real.
-
-Over time, this will improve, just not right now (I might get overwhelmed as this is my first time ever contributing and managing a repository, but it won't stop me from making progress).
+## Things that would really improve the quality of this work
+- Tests for packaging extensions.
+- Conventional naming for extensions.
+  - [VS Code]: `vscode-extensions.${author}.${ename}` (use by [nixpkgs]) or `vscode-extensions-${ename}` (use by devos-ext-lib)
 
 [mit]: https://mit-license.org
-[danielphan2003]: https://github.com/danielphan2003
 
 [devos]: https://github.com/divnix/devos
 
-[automatically-build-source]: https://github.com/divnix/devos/pull/348
+[VS Code]: https://code.visualstudio.com
+[VS Marketplace]: https://marketplace.visualstudio.com/vscode
+[OpenVSX]: https://open-vsx.org
 
 [fu]: https://github.com/numtide/flake-utils
 [fup]: https://github.com/gytis-ivaskevicius/flake-utils-plus
@@ -73,5 +85,3 @@ Over time, this will improve, just not right now (I might get overwhelmed as thi
 [devshell]: https://github.com/numtide/devshell
 [nixpkgs]: https://github.com/NixOS/nixpkgs
 [nvfetcher]: https://github.com/berberman/nvfetcher
-
-[bud]: https://github.com/divnix/bud
