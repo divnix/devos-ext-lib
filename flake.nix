@@ -22,12 +22,23 @@
       # .. we hope you like this style.
       # .. it's adopted by a growing number of projects.
       # Please consider adopting it if you want to help to improve flakes.
+
+      makeExtLib = pkgSet: path: { pkgSetUtils ? "${pkgSet}-utils" }@attrs: [
+        (import ./src/overlay.nix pkgSet path attrs)
+      ] ++ nixpkgs.lib.optionals
+        (builtins.pathExists "${path}/overlay.nix")
+        [ "${path}/overlay.nix" ];
     in
     {
+      lib.makeExtLib = makeExtLib;
+
       # what you came for ...
-      lib = ufrContract supportedSystems ./. inputs self;
-      overlay = {
-        vscode = import ./src/vscode/overlay.nix;
+      packages = ufrContract supportedSystems ./. inputs self;
+
+      overlays = {
+
+        vscode-extensions = makeExtLib "vscode-extensions" ./src/pkgs/misc/vscode-extensions { pkgSetUtils = "vscode-utils"; };
+
       };
     };
 }
