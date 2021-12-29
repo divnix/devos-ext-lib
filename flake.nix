@@ -37,6 +37,8 @@
 
       overlays = {
 
+        papermc = makeExtLib "papermc-pkgs" ./src/pkgs/games/papermc { };
+
         python3Packages = makeExtLib "python3Packages" ./src/pkgs/development/python-modules { };
 
         vscode-extensions = makeExtLib "vscode-extensions" ./src/pkgs/misc/vscode-extensions { pkgSetUtils = "vscode-utils"; };
