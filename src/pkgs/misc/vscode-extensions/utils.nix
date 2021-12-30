@@ -26,6 +26,7 @@ in pkgSetUtils // rec {
       ext = pkgSetUtils.buildVscodeMarketplaceExtension (source' // {
         vsix = src;
         mktplcRef = { inherit version name publisher; };
+        unpackPhase = "unzip $src";
       });
     in lib.nameValuePair name' ext;
   
