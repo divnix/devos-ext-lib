@@ -1,4 +1,4 @@
-{ lib, pkgSet, pkgSetUtils, vscode }:
+{ lib, pkgSet, pkgSetUtils, vscode, libarchive }:
 let
   meta' = { inherit (vscode) platforms; };
 in pkgSetUtils // rec {
@@ -26,15 +26,20 @@ in pkgSetUtils // rec {
       ext = pkgSetUtils.buildVscodeMarketplaceExtension (source' // {
         vsix = src;
         mktplcRef = { inherit version name publisher; };
-        unpackPhase = "unzip $src";
+        buildInputs = [ libarchive ];
+        unpackPhase = ''
+          bsdtar xvf "$src" --strip-components=1 'extension/*'
+        '';
       });
-    in lib.nameValuePair name' ext;
+    in lib.nameValuePair (lib.toLower name') ext;
   
   pkgBuilder' = prefix: publisher: sources:
     let
       pkgSet' = pkgSet."${publisher}" or { };
       exts = lib.foldl' (r: e:
-        r // { "${lib.toLower e.name}" = (pkgBuilder prefix e.name e).value; }
+        let
+          inherit (pkgBuilder prefix e.name e) name value;
+        in r // { "${name}" = value; }
       ) { } sources;
     in lib.nameValuePair (lib.toLower publisher) (pkgSet' // exts);
 }
