@@ -9,11 +9,11 @@
 }: pkgSetUtils // rec {
   # based on https://www.creeperhost.net/wiki/books/minecraft-java-edition/page/changing-java-versions
   mapMcJreVersion = mcVer: let
-    cmpMcVer = builtins.compareVersions mcVer;
+    isMcVer = mcVer': builtins.compareVersions mcVer mcVer' == -1;
   in
-    if cmpMcVer "1.17" == -1 then jre8
-    else if cmpMcVer "1.18" == -1 then javaPackages.compiler.openjdk16.headless
-    else if cmpMcVer "1.19" == -1 then javaPackages.compiler.openjdk17.headless
+    if isMcVer "1.17" then jre8
+    else if isMcVer "1.18" then javaPackages.compiler.openjdk16.headless
+    else if isMcVer "1.19" then javaPackages.compiler.openjdk17.headless
     else jre_headless;
 
   pkgBuilder =
@@ -34,7 +34,7 @@
           "version"
         ];
       papermc' = (papermc.override { 
-        jre = mapMcJreVersion mcVer { };
+        jre = mapMcJreVersion mcVer;
       }).overrideAttrs (_: source' // {
         passthru.mcVer = mcVer;
         version = "${mcVer}r${version}";
