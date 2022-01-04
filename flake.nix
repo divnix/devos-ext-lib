@@ -39,7 +39,7 @@
 
         minecraft-mods = makeExtLib "minecraft-mods" ./src/pkgs/misc/minecraft-mods { };
 
-        papermc = makeExtLib "papermc-pkgs" ./src/pkgs/games/papermc { };
+        papermc = makeExtLib "papermc-pkgs" ./src/pkgs/games/papermc { pkgSetUtils = "papermc-utils"; };
 
         python3Packages = makeExtLib "python3Packages" ./src/pkgs/development/python-modules { };
 
