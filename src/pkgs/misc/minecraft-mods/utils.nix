@@ -28,7 +28,7 @@ in pkgSetUtils // {
     , ...
     }@source:
     let
-      dontUnpack = !(lib.isJar src.name);
+      dontUnpack = lib.isJar src.name;
       mod = stdenv.mkDerivation {
         inherit src version dontUnpack;
 
