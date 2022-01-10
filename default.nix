@@ -7,6 +7,7 @@ let
     config = { };
     overlays = flatten' (builtins.attrValues {
       inherit (self.overlays)
+        papermc
         python3Packages
         vscode-extensions
         ;
@@ -16,6 +17,9 @@ in
 {
   inherit (pkgs)
     lib
+
+    papermc-pkgs-builder
+    papermc-utils
 
     python3Packages-builder
     python3Packages-utils
