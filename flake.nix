@@ -43,6 +43,8 @@
 
         python3Packages = makeExtLib "python3Packages" ./src/pkgs/development/python-modules { };
 
+        vimPlugins = makeExtLib "vimPlugins" ./src/pkgs/misc/vim-plugins { pkgSetUtils = "vimUtils"; };
+
         vscode-extensions = makeExtLib "vscode-extensions" ./src/pkgs/misc/vscode-extensions { pkgSetUtils = "vscode-utils"; };
 
       };

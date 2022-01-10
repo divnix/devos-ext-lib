@@ -10,6 +10,7 @@ let
         minecraft-mods
         papermc
         python3Packages
+        vimPlugins
         vscode-extensions
         ;
     });
@@ -27,6 +28,9 @@ in
 
     python3Packages-builder
     python3Packages-utils
+
+    vimPlugins-builder
+    vimUtils
 
     vscode-extensions-builder
     vscode-utils
