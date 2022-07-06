@@ -1,0 +1,3 @@
+{ lib }: {
+  inherit (lib) filterSources;
+}
