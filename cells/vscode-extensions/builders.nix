@@ -2,7 +2,7 @@
   inputs,
   cell,
 }: let
-  l = nixpkgs.lib // builtins // cells.devos-ext-lib.lib;
+  l = nixpkgs.lib // builtins;
   inherit (inputs) cells nixpkgs;
 in {
   default = cell.builders.no-namespace;
