@@ -1,0 +1,28 @@
+name: Test all package sets
+
+on:
+  push:
+    branches:
+      - main
+  merge_request:
+  workflow_dispatch:
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3.1.0
+
+    - name: Install latest nix
+      uses: cachix/install-nix-action@v18
+      with:
+        extra_nix_config: |
+          substituters = https://cache.nixos.org https://nix-community.cachix.org https://fog.cachix.org
+          trusted-public-keys = cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY= nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs= fog.cachix.org-1:FAxiA6qMLoXEUdEq+HaT24g1MjnxdfygrbrLDBp6U/s=
+        nix_path: nixpkgs=channel:nixos-unstable
+
+    - name: Quick eval
+      run: nix develop --show-trace --print-build-logs --command evalnix
+
+    - name: Run all tests
+      run: nix develop --show-trace --print-build-logs .#devShells.x86_64-linux.checks --command run-all
